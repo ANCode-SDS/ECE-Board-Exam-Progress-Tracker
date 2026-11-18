@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECE Board Exam Review Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --danger: #ef4444;
+      --danger-soft: #fef2f2;
+      --success: #16a34a;
+      --warning: #d97706;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --row-hover: #f8fafc;
+      --row-highlight: #f1f5f9;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b1120;
+      --card: #111827;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --primary-soft: rgba(59, 130, 246, 0.15);
+      --danger: #f87171;
+      --danger-soft: rgba(248, 113, 113, 0.15);
+      --success: #34d399;
+      --warning: #fbbf24;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #1e293b;
+      --row-hover: #1e293b;
+      --row-highlight: #162032;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0 1rem 4rem 1rem;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .top-bar {
+      height: 5px;
+      background: linear-gradient(90deg, #2563eb, #06b6d4, #10b981);
+      margin: 0 -1rem 2rem -1rem;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 2px;
+      display: block;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 0.55rem 1rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-outline {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover {
+      background: var(--row-hover);
+      border-color: var(--muted);
+    }
+
+    .btn-icon {
+      padding: 0.55rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .btn-danger-ghost {
+      background: transparent;
+      color: var(--muted);
+      padding: 0.35rem 0.55rem;
+      border-radius: 6px;
+    }
+    .btn-danger-ghost:hover {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    /* Tabs Navigation */
+    .tabs-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700;
+      white-space: nowrap;
+      font-size: 0.95rem;
+    }
+
+    .tab-btn:hover {
+      background: var(--row-hover);
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: rgba(37, 99, 235, 0.25);
+    }
+
+    /* Scoreboard Card */
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-lg);
+      position: sticky;
+      top: 1rem;
+      z-index: 20;
+    }
+
+    .summary-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tab-info-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .combine-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      background: var(--bg);
+      padding: 0.4rem 0.85rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .stat-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .stat-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      margin-top: 0.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-subtext {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      font-weight: 500;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      margin-top: 1.15rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #2563eb, #10b981);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .weight-ok { color: var(--success); }
+    .weight-warn { color: var(--warning); }
+    .weight-over { color: var(--danger); }
+
+    /* Category Cards */
+    .category-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.35rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+    }
+
+    .category-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      font-size: 0.73rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      padding: 0.6rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:hover {
+      background: var(--row-hover);
+    }
+
+    td {
+      padding: 0.55rem 0.5rem;
+      vertical-align: middle;
+    }
+
+    tfoot tr {
+      background-color: var(--row-highlight);
+      border-top: 2px solid var(--border);
+      font-weight: 700;
+    }
+
+    tfoot td {
+      padding: 0.8rem 0.5rem;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .section-total-earned {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 0.5rem 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.92rem;
+      color: var(--text);
+      background: var(--card);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+
+    .earned-badge {
+      display: inline-block;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+
+<div class="container">
+  <header>
+    <div class="brand">
+      <div class="brand-icon">ECE</div>
+      <div>
+        <h1>Board Exam Review Tracker</h1>
+        <span class="subtitle">Official PRC Table of Specifications (TOS) Calculator</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" id="theme-toggle" title="Toggle Dark Mode" onclick="toggleTheme()">🌙</button>
+      <button class="btn-outline" onclick="resetScores()">Reset Scores</button>
+    </div>
+  </header>
+
+  <!-- Tabs Bar: MATH -> ELEX -> GEAS -> EST -->
+  <div class="tabs-wrapper" id="tabs-bar"></div>
+
+  <!-- Scoreboard -->
+  <div class="summary-card">
+    <div class="summary-top">
+      <div class="tab-info-title" id="scoreboard-title">MATH Subject Tracker (20% Board Weight)</div>
+
+      <label class="combine-toggle" title="Calculate total composite board exam score out of 100%">
+        <input type="checkbox" id="combine-tabs-checkbox" onchange="toggleCombineMode(this.checked)" />
+        <span>Combine All Subjects (Overall Board Rating)</span>
+      </label>
+    </div>
+
+    <div class="summary-grid">
+      <div class="stat-box">
+        <span class="stat-label" id="points-label">Subject Score Points</span>
+        <span class="stat-value" id="total-points" style="color: var(--primary);">0.00 / 20</span>
+        <span class="stat-subtext" id="points-subtext">Weighted points earned in MATH</span>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-label">Percentage Rating</span>
+        <span class="stat-value" id="total-grade">0.00%</span>
+        <span class="stat-subtext">Subject performance</span>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-label">Board Weight Scale</span>
+        <span class="stat-value" id="total-weight">20%</span>
+        <span class="stat-subtext" id="weight-status">Official PRC TOS Weight</span>
+      </div>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="grade-progress-bar"></div>
+    </div>
+  </div>
+
+  <!-- Topics & Subtopics Container -->
+  <div id="categories-container"></div>
+</div>
+
+<script>
+  // Official PRC ECE Board Exam TOS Dataset
+  const boardSubjects = [
+    {
+      id: "math",
+      name: "MATH (20%)",
+      fullName: "Mathematics (20% Board Weight)",
+      maxScoreScale: 20,
+      categories: [
+        {
+          name: "1.0 Differential Calculus (3% / 15 items)",
+          items: [
+            { subtopic: "Functions, Continuity, and Limits", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Derivatives and Its Applications", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Higher-Order Derivatives", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Parametric Equations", max: 4, weight: 0.8, score: "" },
+            { subtopic: "Partial Differentiation", max: 3, weight: 0.6, score: "" }
+          ]
+        },
+        {
+          name: "2.0 Integral Calculus (3% / 15 items)",
+          items: [
+            { subtopic: "Integration Concepts/Formulas", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Integration Techniques", max: 4, weight: 0.8, score: "" },
+            { subtopic: "Improper Integrals", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Application of Integral", max: 4, weight: 0.8, score: "" },
+            { subtopic: "Multiple Integration and its applications", max: 2, weight: 0.4, score: "" }
+          ]
+        },
+        {
+          name: "3.0 Differential Equation (3% / 15 items)",
+          items: [
+            { subtopic: "First-Order, First-Degree ODE and Application", max: 6, weight: 1.2, score: "" },
+            { subtopic: "Applications & Higher-Order ODE", max: 4, weight: 0.8, score: "" },
+            { subtopic: "Laplace Transforms, Inverses, and Applications", max: 5, weight: 1.0, score: "" }
+          ]
+        },
+        {
+          name: "4.0 Advanced Engineering Mathematics for ECE (3% / 15 items)",
+          items: [
+            { subtopic: "Complex Numbers and Applications", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Series and Transforms", max: 4, weight: 0.8, score: "" },
+            { subtopic: "Ordinary and Partial Differential Equations", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Simultaneous linear and non-linear equations", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Numerical Differentiation, Integration & Optimization", max: 3, weight: 0.6, score: "" }
+          ]
+        },
+        {
+          name: "5.0 Engineering Data Analysis (3% / 15 items)",
+          items: [
+            { subtopic: "Obtaining Data", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Statistical Sampling, distribution, and intervals", max: 5, weight: 1.0, score: "" },
+            { subtopic: "Test of Hypothesis", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Regression and Correlation", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Design of experiments", max: 4, weight: 0.8, score: "" }
+          ]
+        },
+        {
+          name: "6.0 Electromagnetics (1.8% / 9 items)",
+          items: [
+            { subtopic: "Vector Analysis", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Directional derivative, gradient, divergence, curl", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Integral Theorems (Green's, Divergence, Stokes')", max: 3, weight: 0.6, score: "" }
+          ]
+        },
+        {
+          name: "7.0 Signals, Spectra & Signal Processing (1.6% / 8 items)",
+          items: [
+            { subtopic: "Z-Transforms", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Convolution", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Correlation", max: 3, weight: 0.6, score: "" }
+          ]
+        },
+        {
+          name: "8.0 Feedback and Control Systems (1.6% / 8 items)",
+          items: [
+            { subtopic: "Pole and zero determination", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Transient response", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Block diagram and signal flow", max: 3, weight: 0.6, score: "" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "elex",
+      name: "ELEX (30%)",
+      fullName: "Electronics Engineering (30% Board Weight)",
+      maxScoreScale: 30,
+      categories: [
+        {
+          name: "1.0 DC Electrical Circuits (3.6% / 12 items)",
+          items: [
+            { subtopic: "Resistive Network", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Mesh and Node Equations", max: 3, weight: 0.9, score: "" },
+            { subtopic: "Network Theorems", max: 3, weight: 0.9, score: "" },
+            { subtopic: "Transient Analysis", max: 1, weight: 0.3, score: "" },
+            { subtopic: "Solution to DC Network Problems", max: 3, weight: 0.9, score: "" }
+          ]
+        },
+        {
+          name: "2.0 AC Electrical Circuits (3.6% / 12 items)",
+          items: [
+            { subtopic: "Solution to AC Network Problems", max: 3, weight: 0.9, score: "" },
+            { subtopic: "Impedance and Admittance", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Resonance", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Power in AC Circuits", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Two-Port Network Parameters & Transfer Function", max: 3, weight: 0.9, score: "" }
+          ]
+        },
+        {
+          name: "3.0 Electromagnetics (2.4% / 8 items)",
+          items: [
+            { subtopic: "Steady Electric and Magnetic Fields", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Dielectric and Magnetic Materials", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Coupled and Magnetic Circuits", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Time-Varying Fields and Maxwell's Equation", max: 2, weight: 0.6, score: "" }
+          ]
+        },
+        {
+          name: "4.0 Electronic Devices and Circuits (4.2% / 14 items)",
+          items: [
+            { subtopic: "Diode Wave Shaping & Special Diode Applications", max: 3, weight: 0.9, score: "" },
+            { subtopic: "BJT and FET Small Signal Analysis", max: 4, weight: 1.2, score: "" },
+            { subtopic: "Diode Equivalent Circuits", max: 1, weight: 0.3, score: "" },
+            { subtopic: "Voltage Multipliers, Power Supply & Regulation", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Bipolar Junction Transistor and FET", max: 4, weight: 1.2, score: "" }
+          ]
+        },
+        {
+          name: "5.0 Electronic Circuit Analysis and Design (4.2% / 14 items)",
+          items: [
+            { subtopic: "BJT and FET Frequency Response", max: 4, weight: 1.2, score: "" },
+            { subtopic: "Cascade and Cascode Connections", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Current Mirrors and Current Source", max: 1, weight: 0.3, score: "" },
+            { subtopic: "Differential and Operational Amplifier", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Feedback Systems, Oscillators, and Filters", max: 5, weight: 1.5, score: "" }
+          ]
+        },
+        {
+          name: "6.0 Electronic Systems and Design (2.4% / 8 items)",
+          items: [
+            { subtopic: "Thyristors (SCR, UJT, PUT, TRIAC, DIAC)", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Optoelectronic Devices and Sensors", max: 1, weight: 0.3, score: "" },
+            { subtopic: "Transducers, Data Acquisition & Interfacing", max: 1, weight: 0.3, score: "" },
+            { subtopic: "Programmable Logic Controllers (PLC)", max: 1, weight: 0.3, score: "" },
+            { subtopic: "Building Mgmt, HVAC, Security & AV Controls", max: 3, weight: 0.9, score: "" }
+          ]
+        },
+        {
+          name: "7.0 Logic Circuits and Switching Theory (3.6% / 12 items)",
+          items: [
+            { subtopic: "Boolean Algebra and Logic Gates", max: 3, weight: 0.9, score: "" },
+            { subtopic: "Minimization of Combinational Logic Circuits", max
