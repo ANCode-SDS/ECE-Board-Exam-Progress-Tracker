@@ -161,17 +161,6 @@
       font-size: 1rem;
     }
 
-    .btn-danger-ghost {
-      background: transparent;
-      color: var(--muted);
-      padding: 0.35rem 0.55rem;
-      border-radius: 6px;
-    }
-    .btn-danger-ghost:hover {
-      background: var(--danger-soft);
-      color: var(--danger);
-    }
-
     /* Tabs Navigation */
     .tabs-wrapper {
       display: flex;
@@ -299,10 +288,6 @@
       transition: width 0.3s ease;
     }
 
-    .weight-ok { color: var(--success); }
-    .weight-warn { color: var(--warning); }
-    .weight-over { color: var(--danger); }
-
     /* Category Cards */
     .category-card {
       background: var(--card);
@@ -314,13 +299,9 @@
     }
 
     .category-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       margin-bottom: 1rem;
       padding-bottom: 0.75rem;
       border-bottom: 1px solid var(--border);
-      gap: 1rem;
     }
 
     .category-title {
@@ -470,7 +451,6 @@
 </div>
 
 <script>
-  // Official PRC ECE Board Exam TOS Dataset
   const boardSubjects = [
     {
       id: "math",
@@ -621,4 +601,500 @@
           name: "7.0 Logic Circuits and Switching Theory (3.6% / 12 items)",
           items: [
             { subtopic: "Boolean Algebra and Logic Gates", max: 3, weight: 0.9, score: "" },
-            { subtopic: "Minimization of Combinational Logic Circuits", max
+            { subtopic: "Minimization of Combinational Logic Circuits", max: 4, weight: 1.2, score: "" },
+            { subtopic: "Sequential Logic Circuits", max: 3, weight: 0.9, score: "" },
+            { subtopic: "Algorithmic State Machine (ASM)", max: 1, weight: 0.3, score: "" },
+            { subtopic: "Asynchronous Sequential Logic", max: 1, weight: 0.3, score: "" }
+          ]
+        },
+        {
+          name: "8.0 Microprocessor & Microcontroller Systems (3.6% / 12 items)",
+          items: [
+            { subtopic: "Microprocessor Unit", max: 3, weight: 0.9, score: "" },
+            { subtopic: "Memory Subsystem", max: 2, weight: 0.6, score: "" },
+            { subtopic: "I/O Subsystem", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Instruction Set Architecture & Assembly", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Microcontrollers", max: 3, weight: 0.9, score: "" }
+          ]
+        },
+        {
+          name: "9.0 Feedback and Control Systems (2.4% / 8 items)",
+          items: [
+            { subtopic: "Block Diagrams and Signal Flow Graphs", max: 1, weight: 0.3, score: "" },
+            { subtopic: "LTI Systems and Transient Analysis", max: 1, weight: 0.3, score: "" },
+            { subtopic: "System Modeling and Transfer Function", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Poles, Zeros, Root Locus & Stability Analysis", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Steady State Analysis and Frequency Response", max: 2, weight: 0.6, score: "" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "geas",
+      name: "GEAS (20%)",
+      fullName: "General Engineering and Applied Sciences (20% Board Weight)",
+      maxScoreScale: 20,
+      categories: [
+        {
+          name: "1.0 Chemistry for Engineers (2% / 10 items)",
+          items: [
+            { subtopic: "Energy", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Chemistry of Engineering Materials", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Chemistry of Nano materials", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Environment & Special Topics", max: 2, weight: 0.4, score: "" }
+          ]
+        },
+        {
+          name: "2.0 Physics for Engineers (3% / 15 items)",
+          items: [
+            { subtopic: "Work, Energy, Power, Momentum, Kinematics, Dynamics", max: 5, weight: 1.0, score: "" },
+            { subtopic: "Rotation Dynamics, Elasticity, Oscillations/Waves", max: 4, weight: 0.8, score: "" },
+            { subtopic: "Fluids, Heat Transfer", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Electrostatics, Electricity, Magnetism, Optics", max: 4, weight: 0.8, score: "" }
+          ]
+        },
+        {
+          name: "3.0 Engineering Economics (1.2% / 6 items)",
+          items: [
+            { subtopic: "Introduction Terms & Basic Concepts", max: 1, weight: 0.2, score: "" },
+            { subtopic: "Money-Time Relationship & Economy Study Methods", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Decisions Under Certainty", max: 1, weight: 0.2, score: "" },
+            { subtopic: "Decisions Recognizing Risk & Uncertainty", max: 2, weight: 0.4, score: "" }
+          ]
+        },
+        {
+          name: "4.0 Engineering Management (1.8% / 9 items)",
+          items: [
+            { subtopic: "Evolution of Management Theory & Functions", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Planning, Leading, Organizing, Controlling", max: 4, weight: 0.8, score: "" },
+            { subtopic: "Managing Product and Service Operations", max: 1, weight: 0.2, score: "" },
+            { subtopic: "Managing Marketing and Finance Functions", max: 2, weight: 0.4, score: "" }
+          ]
+        },
+        {
+          name: "5.0 Technopreneurship 101 (2% / 10 items)",
+          items: [
+            { subtopic: "Introduction, Customers, Value Proposition & Ethics", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Market ID, Analysis & Competitive Advantage", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Business Models & Intellectual Property", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Business Plan, Financial Analysis & Capital Raising", max: 3, weight: 0.6, score: "" }
+          ]
+        },
+        {
+          name: "6.0 Physics 2 (2% / 10 items)",
+          items: [
+            { subtopic: "Thermodynamics, Condensed Matter, Atomic/Nuclear", max: 4, weight: 0.8, score: "" },
+            { subtopic: "Electricity, Magnetism, and EM Induction", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Inductance / AC", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Optics", max: 1, weight: 0.2, score: "" }
+          ]
+        },
+        {
+          name: "7.0 Materials Science and Engineering (1.6% / 8 items)",
+          items: [
+            { subtopic: "Review Fundamentals & Atomic Bonding", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Crystalline and Non-crystalline Structures", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Mechanical Properties & Processing of Metals", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Electrical, Thermal, Magnetic & Optical Properties", max: 2, weight: 0.4, score: "" }
+          ]
+        },
+        {
+          name: "8.0 Computer Programming (2% / 10 items)",
+          items: [
+            { subtopic: "OOP, UML, Object-Oriented Analysis & Design", max: 4, weight: 0.8, score: "" },
+            { subtopic: "Programming Language Fundamentals", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Exception Handling", max: 1, weight: 0.2, score: "" },
+            { subtopic: "Graphical User Interface (GUI) Programming", max: 2, weight: 0.4, score: "" }
+          ]
+        },
+        {
+          name: "9.0 Environment Science and Engineering (2% / 10 items)",
+          items: [
+            { subtopic: "Nature, Ecology & Natural Systems", max: 4, weight: 0.8, score: "" },
+            { subtopic: "Environmental Concerns and Crises", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Environmental Impact Assessment", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Sustainable Development", max: 2, weight: 0.4, score: "" }
+          ]
+        },
+        {
+          name: "10.0 ECE Laws, Contracts, Ethics & Safety (2% / 10 items)",
+          items: [
+            { subtopic: "Laws, Obligations and Contracts", max: 2, weight: 0.4, score: "" },
+            { subtopic: "Pledge, Board Exam Guidelines, and PRC Regulation", max: 3, weight: 0.6, score: "" },
+            { subtopic: "Practicing the ECE Profession", max: 1, weight: 0.2, score: "" },
+            { subtopic: "Statutes, Safety Standards, and PEC Codes", max: 4, weight: 0.8, score: "" }
+          ]
+        },
+        {
+          name: "11.0 CAD (0.4% / 2 items)",
+          items: [
+            { subtopic: "CAD Environment, Snapping, Dimensioning & Plotting", max: 2, weight: 0.4, score: "" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "est",
+      name: "EST (30%)",
+      fullName: "Electronics Systems and Technologies (30% Board Weight)",
+      maxScoreScale: 30,
+      categories: [
+        {
+          name: "1.0 Signals, Spectra, Signal Processing (1% / 10 items)",
+          items: [
+            { subtopic: "Classification & Characteristics of Signals", max: 2, weight: 0.2, score: "" },
+            { subtopic: "Sampling Theorem and Aliasing", max: 3, weight: 0.3, score: "" },
+            { subtopic: "Difference Equations for FIR/IIR Filters", max: 2, weight: 0.2, score: "" },
+            { subtopic: "Convolution, Z-Transforms, Fourier Transforms", max: 3, weight: 0.3, score: "" }
+          ]
+        },
+        {
+          name: "2.0 Principles of Communications (7.5% / 25 items)",
+          items: [
+            { subtopic: "Introduction to Communications Systems", max: 4, weight: 1.2, score: "" },
+            { subtopic: "Noise", max: 5, weight: 1.5, score: "" },
+            { subtopic: "AM, SSB Techniques, and FM", max: 6, weight: 1.8, score: "" },
+            { subtopic: "Radio Receivers", max: 3, weight: 0.9, score: "" },
+            { subtopic: "Pulse & Digital Modulation, Broadband Systems", max: 7, weight: 2.1, score: "" }
+          ]
+        },
+        {
+          name: "3.0 Digital Communications (4.5% / 15 items)",
+          items: [
+            { subtopic: "Introduction to Digital Comm Systems", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Digital Transmission, PAM, PWM, PPM, PCM", max: 3, weight: 0.9, score: "" },
+            { subtopic: "Digital Modulation (ASK, FSK, PSK, QAM)", max: 4, weight: 1.2, score: "" },
+            { subtopic: "Information Theory & Error Detection", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Multiplexing (FDM, TDM, WDM, FDMA, CDMA, TDMA)", max: 4, weight: 1.2, score: "" }
+          ]
+        },
+        {
+          name: "4.0 Transmission and Antenna Systems (6.9% / 23 items)",
+          items: [
+            { subtopic: "Transmission Lines, Losses, Matching & Smith Chart", max: 5, weight: 1.5, score: "" },
+            { subtopic: "Radio Wave Propagation & Field Strength Calculations", max: 8, weight: 2.4, score: "" },
+            { subtopic: "Antenna Systems", max: 6, weight: 1.8, score: "" },
+            { subtopic: "Wave guides and Fiber Optics", max: 4, weight: 1.2, score: "" }
+          ]
+        },
+        {
+          name: "5.0 Electronics 3: Electronic Systems & Design (2.1% / 7 items)",
+          items: [
+            { subtopic: "Optoelectronic Devices, Sensors & Transducers", max: 2, weight: 0.6, score: "" },
+            { subtopic: "Interfacing Techniques & PLCs", max: 2, weight: 0.6, score: "" },
+            { subtopic: "BMS, HVAC, Security, SCADA & Fire Safety", max: 3, weight: 0.9, score: "" }
+          ]
+        },
+        {
+          name: "6.0 Data Communications (6% / 20 items)",
+          items: [
+            { subtopic: "Intro, Categories, Configurations & Topologies", max: 5, weight: 1.5, score: "" },
+            { subtopic: "Transmission Modes & 2-Wire vs 4-Wire Circuits", max: 4, weight: 1.2, score: "" },
+            { subtopic: "Synchronization, Network Components & Security", max: 3, weight: 0.9, score: "" },
+            { subtopic: "OSI, SNA, TCP/IP, and Protocols", max: 5, weight: 1.5, score: "" },
+            { subtopic: "LAN/MAN/WAN/GAN and ISDN/B-ISDN", max: 3, weight: 0.9, score: "" }
+          ]
+        }
+      ]
+    }
+  ];
+
+  let appState = JSON.parse(localStorage.getItem("eceBoardTrackerState")) || {
+    activeTabId: "math",
+    combineAll: false,
+    data: boardSubjects
+  };
+
+  const savedTheme = localStorage.getItem("eceTrackerTheme") || "light";
+  if (savedTheme === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+    document.getElementById("theme-toggle").textContent = "☀️";
+  }
+
+  function toggleTheme() {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    if (isDark) {
+      document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("eceTrackerTheme", "light");
+      document.getElementById("theme-toggle").textContent = "🌙";
+    } else {
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("eceTrackerTheme", "dark");
+      document.getElementById("theme-toggle").textContent = "☀️";
+    }
+  }
+
+  function saveData() {
+    localStorage.setItem("eceBoardTrackerState", JSON.stringify(appState));
+  }
+
+  function getActiveSubject() {
+    return appState.data.find(s => s.id === appState.activeTabId) || appState.data[0];
+  }
+
+  function switchTab(tabId) {
+    appState.activeTabId = tabId;
+    saveData();
+    render();
+  }
+
+  function toggleCombineMode(checked) {
+    appState.combineAll = checked;
+    saveData();
+    recalculateTotals();
+  }
+
+  function renderTabs() {
+    const tabsBar = document.getElementById("tabs-bar");
+    if (!tabsBar) return;
+    tabsBar.innerHTML = "";
+
+    appState.data.forEach(sub => {
+      const btn = document.createElement("button");
+      btn.className = `tab-btn ${sub.id === appState.activeTabId ? "active" : ""}`;
+      btn.textContent = sub.name;
+      btn.onclick = () => switchTab(sub.id);
+      tabsBar.appendChild(btn);
+    });
+  }
+
+  function render() {
+    renderTabs();
+    const activeSub = getActiveSubject();
+    if (!activeSub) return;
+    
+    const combineCheckbox = document.getElementById("combine-tabs-checkbox");
+    if (combineCheckbox) combineCheckbox.checked = appState.combineAll;
+
+    const scoreboardTitle = document.getElementById("scoreboard-title");
+    if (scoreboardTitle) {
+      scoreboardTitle.textContent = appState.combineAll 
+        ? "Overall ECE Board Exam Score (Combined Out of 100%)" 
+        : `${activeSub.fullName}`;
+    }
+
+    const container = document.getElementById("categories-container");
+    if (!container) return;
+    container.innerHTML = "";
+
+    activeSub.categories.forEach((cat, catIndex) => {
+      const card = document.createElement("div");
+      card.className = "category-card";
+
+      let catWeight = 0;
+      let catEarned = 0;
+      let catMaxItems = 0;
+
+      const rowsHtml = cat.items.map((item, itemIndex) => {
+        const scoreNum = parseFloat(item.score);
+        const maxNum = parseFloat(item.max);
+        const weightNum = parseFloat(item.weight) || 0;
+
+        let earned = 0;
+        if (!isNaN(scoreNum) && maxNum > 0) {
+          earned = (scoreNum / maxNum) * weightNum;
+        }
+
+        catWeight += weightNum;
+        catEarned += earned;
+        catMaxItems += maxNum;
+
+        return `
+          <tr>
+            <td style="width: 42%;">
+              <span style="font-weight: 500; font-size: 0.92rem;">${escapeHtml(item.subtopic)}</span>
+            </td>
+            <td style="width: 15%;">
+              <input type="number" step="any" min="0" max="${item.max}" value="${item.score}"
+                placeholder="0"
+                oninput="updateScore('${activeSub.id}', ${catIndex}, ${itemIndex}, this.value)" />
+            </td>
+            <td style="width: 15%; color: var(--muted); font-weight: 600;">
+              / ${item.max} items
+            </td>
+            <td style="width: 14%; color: var(--muted);">
+              ${weightNum.toFixed(1)}%
+            </td>
+            <td style="width: 14%;">
+              <span class="earned-badge" id="earned-${activeSub.id}-${catIndex}-${itemIndex}">
+                ${earned.toFixed(2)} pts
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      card.innerHTML = `
+        <div class="category-header">
+          <h3 class="category-title">${escapeHtml(cat.name)}</h3>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Subtopic / Competency</th>
+                <th>Correct Items</th>
+                <th>Total Items</th>
+                <th>TOS Weight</th>
+                <th>Earned Pts</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">SECTION TOTAL</td>
+                <td id="cat-weight-total-${activeSub.id}-${catIndex}">${catWeight.toFixed(1)}% (${catMaxItems} items)</td>
+                <td class="section-total-earned" id="cat-earned-total-${activeSub.id}-${catIndex}">
+                  ${catEarned.toFixed(2)} / ${catWeight.toFixed(1)}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+
+    recalculateTotals();
+  }
+
+  function updateScore(subId, catIndex, itemIndex, value) {
+    const sub = appState.data.find(s => s.id === subId);
+    if (sub) {
+      sub.categories[catIndex].items[itemIndex].score = value;
+      saveData();
+      recalculateTotals();
+    }
+  }
+
+  function resetScores() {
+    if (confirm("Reset all score inputs back to blank?")) {
+      appState.data.forEach(sub => {
+        sub.categories.forEach(cat => {
+          cat.items.forEach(item => {
+            item.score = "";
+          });
+        });
+      });
+      saveData();
+      render();
+    }
+  }
+
+  function calculateSubjectTotals(sub) {
+    let subEarned = 0;
+    let subWeight = 0;
+
+    sub.categories.forEach(cat => {
+      cat.items.forEach(item => {
+        const score = parseFloat(item.score);
+        const max = parseFloat(item.max);
+        const weight = parseFloat(item.weight) || 0;
+
+        if (!isNaN(score) && max > 0) {
+          subEarned += (score / max) * weight;
+        }
+        subWeight += weight;
+      });
+    });
+
+    return { earned: subEarned, weight: subWeight };
+  }
+
+  function recalculateTotals() {
+    const activeSub = getActiveSubject();
+    if (!activeSub) return;
+
+    activeSub.categories.forEach((cat, catIndex) => {
+      let catEarned = 0;
+      let catWeight = 0;
+
+      cat.items.forEach((item, itemIndex) => {
+        const score = parseFloat(item.score);
+        const max = parseFloat(item.max);
+        const weight = parseFloat(item.weight) || 0;
+
+        let earned = 0;
+        if (!isNaN(score) && max > 0) {
+          earned = (score / max) * weight;
+        }
+
+        catEarned += earned;
+        catWeight += weight;
+
+        const earnedEl = document.getElementById(`earned-${activeSub.id}-${catIndex}-${itemIndex}`);
+        if (earnedEl) earnedEl.textContent = `${earned.toFixed(2)} pts`;
+      });
+
+      const catEarnedEl = document.getElementById(`cat-earned-total-${activeSub.id}-${catIndex}`);
+      if (catEarnedEl) catEarnedEl.textContent = `${catEarned.toFixed(2)} / ${catWeight.toFixed(1)}`;
+    });
+
+    let displayEarned = 0;
+    let displayScale = 100;
+
+    if (appState.combineAll) {
+      appState.data.forEach(sub => {
+        const res = calculateSubjectTotals(sub);
+        displayEarned += res.earned;
+      });
+      displayScale = 100;
+      const pointsLabel = document.getElementById("points-label");
+      const pointsSubtext = document.getElementById("points-subtext");
+      if (pointsLabel) pointsLabel.textContent = "Total Composite Board Rating";
+      if (pointsSubtext) pointsSubtext.textContent = "Combined across Math, Elex, Geas, Est";
+    } else {
+      const res = calculateSubjectTotals(activeSub);
+      displayEarned = res.earned;
+      displayScale = activeSub.maxScoreScale;
+      const pointsLabel = document.getElementById("points-label");
+      const pointsSubtext = document.getElementById("points-subtext");
+      if (pointsLabel) pointsLabel.textContent = `${activeSub.name} Points Earned`;
+      if (pointsSubtext) pointsSubtext.textContent = `Weight scale out of ${displayScale} pts`;
+    }
+
+    const percentage = (displayEarned / displayScale) * 100;
+
+    const totalPointsEl = document.getElementById("total-points");
+    const totalGradeEl = document.getElementById("total-grade");
+    const totalWeightEl = document.getElementById("total-weight");
+    if (totalPointsEl) totalPointsEl.textContent = `${displayEarned.toFixed(2)} / ${displayScale}`;
+    if (totalGradeEl) totalGradeEl.textContent = `${percentage.toFixed(2)}%`;
+    if (totalWeightEl) totalWeightEl.textContent = `${displayScale}%`;
+
+    const progressEl = document.getElementById("grade-progress-bar");
+    if (progressEl) {
+      const clampedPct = Math.min(100, Math.max(0, percentage));
+      progressEl.style.width = `${clampedPct}%`;
+    }
+
+    const statusEl = document.getElementById("weight-status");
+    if (statusEl) {
+      if (percentage >= 70) {
+        statusEl.textContent = "Passing Level (>= 70%) 🎉";
+        statusEl.style.color = "var(--success)";
+      } else {
+        statusEl.textContent = "Keep pushing for board passing target!";
+        statusEl.style.color = "var(--warning)";
+      }
+    }
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // Initialize execution
+  render();
+</script>
+
+</body>
+</html>
