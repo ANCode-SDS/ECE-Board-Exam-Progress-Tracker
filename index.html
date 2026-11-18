@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ECE Board Exam Review Tracker</title>
+  <title>ECE Board Exam Review Checklist</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,9 +14,8 @@
       --primary: #2563eb;
       --primary-hover: #1d4ed8;
       --primary-soft: #eff6ff;
-      --danger: #ef4444;
-      --danger-soft: #fef2f2;
       --success: #16a34a;
+      --success-soft: #f0fdf4;
       --warning: #d97706;
       --text: #0f172a;
       --muted: #64748b;
@@ -34,9 +33,8 @@
       --primary: #3b82f6;
       --primary-hover: #60a5fa;
       --primary-soft: rgba(59, 130, 246, 0.15);
-      --danger: #f87171;
-      --danger-soft: rgba(248, 113, 113, 0.15);
       --success: #34d399;
+      --success-soft: rgba(52, 211, 153, 0.1);
       --warning: #fbbf24;
       --text: #f8fafc;
       --muted: #94a3b8;
@@ -132,15 +130,6 @@
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      box-shadow: var(--shadow-sm);
-    }
-    .btn-primary:hover {
-      background: var(--primary-hover);
     }
 
     .btn-outline {
@@ -332,6 +321,11 @@
 
     tbody tr {
       border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+
+    tbody tr.row-checked {
+      background-color: var(--success-soft);
     }
 
     tbody tr:hover {
@@ -339,7 +333,7 @@
     }
 
     td {
-      padding: 0.55rem 0.5rem;
+      padding: 0.65rem 0.5rem;
       vertical-align: middle;
     }
 
@@ -356,30 +350,23 @@
     }
 
     .section-total-earned {
-      color: var(--primary);
+      color: var(--success);
       font-weight: 800;
     }
 
-    input[type="number"] {
-      width: 100%;
-      padding: 0.5rem 0.65rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.92rem;
-      color: var(--text);
-      background: var(--card);
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-soft);
+    /* Checkbox Styling */
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--success);
+      cursor: pointer;
+      border-radius: 4px;
     }
 
     .earned-badge {
       display: inline-block;
-      background: var(--primary-soft);
-      color: var(--primary);
+      background: var(--success-soft);
+      color: var(--success);
       font-weight: 700;
       font-size: 0.88rem;
       padding: 0.3rem 0.6rem;
@@ -397,13 +384,13 @@
     <div class="brand">
       <div class="brand-icon">ECE</div>
       <div>
-        <h1>Board Exam Review Tracker</h1>
-        <span class="subtitle">Official PRC Table of Specifications (TOS) Calculator</span>
+        <h1>Board Exam Review Checklist</h1>
+        <span class="subtitle">Official PRC TOS Study & Mastery Progress Tracker</span>
       </div>
     </div>
     <div class="header-actions">
       <button class="btn-icon" id="theme-toggle" title="Toggle Dark Mode" onclick="toggleTheme()">🌙</button>
-      <button class="btn-outline" onclick="resetScores()">Reset Scores</button>
+      <button class="btn-outline" onclick="resetChecklist()">Reset Checklist</button>
     </div>
   </header>
 
@@ -413,25 +400,25 @@
   <!-- Scoreboard -->
   <div class="summary-card">
     <div class="summary-top">
-      <div class="tab-info-title" id="scoreboard-title">MATH Subject Tracker (20% Board Weight)</div>
+      <div class="tab-info-title" id="scoreboard-title">MATH Subject Progress (20% Board Weight)</div>
 
-      <label class="combine-toggle" title="Calculate total composite board exam score out of 100%">
+      <label class="combine-toggle" title="Calculate total composite board exam progress out of 100%">
         <input type="checkbox" id="combine-tabs-checkbox" onchange="toggleCombineMode(this.checked)" />
-        <span>Combine All Subjects (Overall Board Rating)</span>
+        <span>Combine All Subjects (Overall Mastery Rating)</span>
       </label>
     </div>
 
     <div class="summary-grid">
       <div class="stat-box">
-        <span class="stat-label" id="points-label">Subject Score Points</span>
-        <span class="stat-value" id="total-points" style="color: var(--primary);">0.00 / 20</span>
-        <span class="stat-subtext" id="points-subtext">Weighted points earned in MATH</span>
+        <span class="stat-label" id="points-label">MATH Mastery Points</span>
+        <span class="stat-value" id="total-points" style="color: var(--success);">0.00 / 20</span>
+        <span class="stat-subtext" id="points-subtext">Weighted points completed in MATH</span>
       </div>
 
       <div class="stat-box">
-        <span class="stat-label">Percentage Rating</span>
+        <span class="stat-label">Mastery Percentage</span>
         <span class="stat-value" id="total-grade">0.00%</span>
-        <span class="stat-subtext">Subject performance</span>
+        <span class="stat-subtext">Subject completion rate</span>
       </div>
 
       <div class="stat-box">
@@ -451,6 +438,7 @@
 </div>
 
 <script>
+  // Official PRC ECE Board Exam TOS Dataset structured for Checklists
   const boardSubjects = [
     {
       id: "math",
@@ -459,75 +447,75 @@
       maxScoreScale: 20,
       categories: [
         {
-          name: "1.0 Differential Calculus (3% / 15 items)",
+          name: "1.0 Differential Calculus (3% / 15 items)[cite: 3]",
           items: [
-            { subtopic: "Functions, Continuity, and Limits", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Derivatives and Its Applications", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Higher-Order Derivatives", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Parametric Equations", max: 4, weight: 0.8, score: "" },
-            { subtopic: "Partial Differentiation", max: 3, weight: 0.6, score: "" }
+            { subtopic: "Functions, Continuity, and Limits", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Derivatives and Its Applications", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Higher-Order Derivatives", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Parametric Equations", max: 4, weight: 0.8, studied: false },
+            { subtopic: "Partial Differentiation", max: 3, weight: 0.6, studied: false }
           ]
         },
         {
-          name: "2.0 Integral Calculus (3% / 15 items)",
+          name: "2.0 Integral Calculus (3% / 15 items)[cite: 3]",
           items: [
-            { subtopic: "Integration Concepts/Formulas", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Integration Techniques", max: 4, weight: 0.8, score: "" },
-            { subtopic: "Improper Integrals", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Application of Integral", max: 4, weight: 0.8, score: "" },
-            { subtopic: "Multiple Integration and its applications", max: 2, weight: 0.4, score: "" }
+            { subtopic: "Integration Concepts/Formulas", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Integration Techniques", max: 4, weight: 0.8, studied: false },
+            { subtopic: "Improper Integrals", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Application of Integral", max: 4, weight: 0.8, studied: false },
+            { subtopic: "Multiple Integration and its applications", max: 2, weight: 0.4, studied: false }
           ]
         },
         {
-          name: "3.0 Differential Equation (3% / 15 items)",
+          name: "3.0 Differential Equation (3% / 15 items)[cite: 3]",
           items: [
-            { subtopic: "First-Order, First-Degree ODE and Application", max: 6, weight: 1.2, score: "" },
-            { subtopic: "Applications & Higher-Order ODE", max: 4, weight: 0.8, score: "" },
-            { subtopic: "Laplace Transforms, Inverses, and Applications", max: 5, weight: 1.0, score: "" }
+            { subtopic: "First-Order, First-Degree ODE and Application", max: 6, weight: 1.2, studied: false },
+            { subtopic: "Applications & Higher-Order ODE", max: 4, weight: 0.8, studied: false },
+            { subtopic: "Laplace Transforms, Inverses, and Applications", max: 5, weight: 1.0, studied: false }
           ]
         },
         {
-          name: "4.0 Advanced Engineering Mathematics for ECE (3% / 15 items)",
+          name: "4.0 Advanced Engineering Mathematics for ECE (3% / 15 items)[cite: 3, 4]",
           items: [
-            { subtopic: "Complex Numbers and Applications", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Series and Transforms", max: 4, weight: 0.8, score: "" },
-            { subtopic: "Ordinary and Partial Differential Equations", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Simultaneous linear and non-linear equations", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Numerical Differentiation, Integration & Optimization", max: 3, weight: 0.6, score: "" }
+            { subtopic: "Complex Numbers and Applications", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Series and Transforms", max: 4, weight: 0.8, studied: false },
+            { subtopic: "Ordinary and Partial Differential Equations", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Simultaneous linear and non-linear equations", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Numerical Differentiation, Integration & Optimization", max: 3, weight: 0.6, studied: false }
           ]
         },
         {
-          name: "5.0 Engineering Data Analysis (3% / 15 items)",
+          name: "5.0 Engineering Data Analysis (3% / 15 items)[cite: 5]",
           items: [
-            { subtopic: "Obtaining Data", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Statistical Sampling, distribution, and intervals", max: 5, weight: 1.0, score: "" },
-            { subtopic: "Test of Hypothesis", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Regression and Correlation", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Design of experiments", max: 4, weight: 0.8, score: "" }
+            { subtopic: "Obtaining Data", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Statistical Sampling, distribution, and intervals", max: 5, weight: 1.0, studied: false },
+            { subtopic: "Test of Hypothesis", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Regression and Correlation", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Design of experiments", max: 4, weight: 0.8, studied: false }
           ]
         },
         {
-          name: "6.0 Electromagnetics (1.8% / 9 items)",
+          name: "6.0 Electromagnetics (1.8% / 9 items)[cite: 5]",
           items: [
-            { subtopic: "Vector Analysis", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Directional derivative, gradient, divergence, curl", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Integral Theorems (Green's, Divergence, Stokes')", max: 3, weight: 0.6, score: "" }
+            { subtopic: "Vector Analysis", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Directional derivative, gradient, divergence, curl", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Integral Theorems (Green's, Divergence, Stokes')", max: 3, weight: 0.6, studied: false }
           ]
         },
         {
-          name: "7.0 Signals, Spectra & Signal Processing (1.6% / 8 items)",
+          name: "7.0 Signals, Spectra & Signal Processing (1.6% / 8 items)[cite: 5]",
           items: [
-            { subtopic: "Z-Transforms", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Convolution", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Correlation", max: 3, weight: 0.6, score: "" }
+            { subtopic: "Z-Transforms", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Convolution", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Correlation", max: 3, weight: 0.6, studied: false }
           ]
         },
         {
-          name: "8.0 Feedback and Control Systems (1.6% / 8 items)",
+          name: "8.0 Feedback and Control Systems (1.6% / 8 items)[cite: 5]",
           items: [
-            { subtopic: "Pole and zero determination", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Transient response", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Block diagram and signal flow", max: 3, weight: 0.6, score: "" }
+            { subtopic: "Pole and zero determination", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Transient response", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Block diagram and signal flow", max: 3, weight: 0.6, studied: false }
           ]
         }
       ]
@@ -539,92 +527,92 @@
       maxScoreScale: 30,
       categories: [
         {
-          name: "1.0 DC Electrical Circuits (3.6% / 12 items)",
+          name: "1.0 DC Electrical Circuits (3.6% / 12 items)[cite: 17]",
           items: [
-            { subtopic: "Resistive Network", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Mesh and Node Equations", max: 3, weight: 0.9, score: "" },
-            { subtopic: "Network Theorems", max: 3, weight: 0.9, score: "" },
-            { subtopic: "Transient Analysis", max: 1, weight: 0.3, score: "" },
-            { subtopic: "Solution to DC Network Problems", max: 3, weight: 0.9, score: "" }
+            { subtopic: "Resistive Network", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Mesh and Node Equations", max: 3, weight: 0.9, studied: false },
+            { subtopic: "Network Theorems", max: 3, weight: 0.9, studied: false },
+            { subtopic: "Transient Analysis", max: 1, weight: 0.3, studied: false },
+            { subtopic: "Solution to DC Network Problems", max: 3, weight: 0.9, studied: false }
           ]
         },
         {
-          name: "2.0 AC Electrical Circuits (3.6% / 12 items)",
+          name: "2.0 AC Electrical Circuits (3.6% / 12 items)[cite: 17]",
           items: [
-            { subtopic: "Solution to AC Network Problems", max: 3, weight: 0.9, score: "" },
-            { subtopic: "Impedance and Admittance", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Resonance", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Power in AC Circuits", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Two-Port Network Parameters & Transfer Function", max: 3, weight: 0.9, score: "" }
+            { subtopic: "Solution to AC Network Problems", max: 3, weight: 0.9, studied: false },
+            { subtopic: "Impedance and Admittance", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Resonance", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Power in AC Circuits", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Two-Port Network Parameters & Transfer Function", max: 3, weight: 0.9, studied: false }
           ]
         },
         {
-          name: "3.0 Electromagnetics (2.4% / 8 items)",
+          name: "3.0 Electromagnetics (2.4% / 8 items)[cite: 17]",
           items: [
-            { subtopic: "Steady Electric and Magnetic Fields", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Dielectric and Magnetic Materials", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Coupled and Magnetic Circuits", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Time-Varying Fields and Maxwell's Equation", max: 2, weight: 0.6, score: "" }
+            { subtopic: "Steady Electric and Magnetic Fields", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Dielectric and Magnetic Materials", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Coupled and Magnetic Circuits", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Time-Varying Fields and Maxwell's Equation", max: 2, weight: 0.6, studied: false }
           ]
         },
         {
-          name: "4.0 Electronic Devices and Circuits (4.2% / 14 items)",
+          name: "4.0 Electronic Devices and Circuits (4.2% / 14 items)[cite: 17, 18]",
           items: [
-            { subtopic: "Diode Wave Shaping & Special Diode Applications", max: 3, weight: 0.9, score: "" },
-            { subtopic: "BJT and FET Small Signal Analysis", max: 4, weight: 1.2, score: "" },
-            { subtopic: "Diode Equivalent Circuits", max: 1, weight: 0.3, score: "" },
-            { subtopic: "Voltage Multipliers, Power Supply & Regulation", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Bipolar Junction Transistor and FET", max: 4, weight: 1.2, score: "" }
+            { subtopic: "Diode Wave Shaping & Special Diode Applications", max: 3, weight: 0.9, studied: false },
+            { subtopic: "BJT and FET Small Signal Analysis", max: 4, weight: 1.2, studied: false },
+            { subtopic: "Diode Equivalent Circuits", max: 1, weight: 0.3, studied: false },
+            { subtopic: "Voltage Multipliers, Power Supply & Regulation", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Bipolar Junction Transistor and FET", max: 4, weight: 1.2, studied: false }
           ]
         },
         {
-          name: "5.0 Electronic Circuit Analysis and Design (4.2% / 14 items)",
+          name: "5.0 Electronic Circuit Analysis and Design (4.2% / 14 items)[cite: 18]",
           items: [
-            { subtopic: "BJT and FET Frequency Response", max: 4, weight: 1.2, score: "" },
-            { subtopic: "Cascade and Cascode Connections", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Current Mirrors and Current Source", max: 1, weight: 0.3, score: "" },
-            { subtopic: "Differential and Operational Amplifier", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Feedback Systems, Oscillators, and Filters", max: 5, weight: 1.5, score: "" }
+            { subtopic: "BJT and FET Frequency Response", max: 4, weight: 1.2, studied: false },
+            { subtopic: "Cascade and Cascode Connections", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Current Mirrors and Current Source", max: 1, weight: 0.3, studied: false },
+            { subtopic: "Differential and Operational Amplifier", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Feedback Systems, Oscillators, and Filters", max: 5, weight: 1.5, studied: false }
           ]
         },
         {
-          name: "6.0 Electronic Systems and Design (2.4% / 8 items)",
+          name: "6.0 Electronic Systems and Design (2.4% / 8 items)[cite: 18]",
           items: [
-            { subtopic: "Thyristors (SCR, UJT, PUT, TRIAC, DIAC)", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Optoelectronic Devices and Sensors", max: 1, weight: 0.3, score: "" },
-            { subtopic: "Transducers, Data Acquisition & Interfacing", max: 1, weight: 0.3, score: "" },
-            { subtopic: "Programmable Logic Controllers (PLC)", max: 1, weight: 0.3, score: "" },
-            { subtopic: "Building Mgmt, HVAC, Security & AV Controls", max: 3, weight: 0.9, score: "" }
+            { subtopic: "Thyristors (SCR, UJT, PUT, TRIAC, DIAC)", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Optoelectronic Devices and Sensors", max: 1, weight: 0.3, studied: false },
+            { subtopic: "Transducers, Data Acquisition & Interfacing", max: 1, weight: 0.3, studied: false },
+            { subtopic: "Programmable Logic Controllers (PLC)", max: 1, weight: 0.3, studied: false },
+            { subtopic: "Building Mgmt, HVAC, Security & AV Controls", max: 3, weight: 0.9, studied: false }
           ]
         },
         {
-          name: "7.0 Logic Circuits and Switching Theory (3.6% / 12 items)",
+          name: "7.0 Logic Circuits and Switching Theory (3.6% / 12 items)[cite: 18, 19]",
           items: [
-            { subtopic: "Boolean Algebra and Logic Gates", max: 3, weight: 0.9, score: "" },
-            { subtopic: "Minimization of Combinational Logic Circuits", max: 4, weight: 1.2, score: "" },
-            { subtopic: "Sequential Logic Circuits", max: 3, weight: 0.9, score: "" },
-            { subtopic: "Algorithmic State Machine (ASM)", max: 1, weight: 0.3, score: "" },
-            { subtopic: "Asynchronous Sequential Logic", max: 1, weight: 0.3, score: "" }
+            { subtopic: "Boolean Algebra and Logic Gates", max: 3, weight: 0.9, studied: false },
+            { subtopic: "Minimization of Combinational Logic Circuits", max: 4, weight: 1.2, studied: false },
+            { subtopic: "Sequential Logic Circuits", max: 3, weight: 0.9, studied: false },
+            { subtopic: "Algorithmic State Machine (ASM)", max: 1, weight: 0.3, studied: false },
+            { subtopic: "Asynchronous Sequential Logic", max: 1, weight: 0.3, studied: false }
           ]
         },
         {
-          name: "8.0 Microprocessor & Microcontroller Systems (3.6% / 12 items)",
+          name: "8.0 Microprocessor & Microcontroller Systems (3.6% / 12 items)[cite: 19]",
           items: [
-            { subtopic: "Microprocessor Unit", max: 3, weight: 0.9, score: "" },
-            { subtopic: "Memory Subsystem", max: 2, weight: 0.6, score: "" },
-            { subtopic: "I/O Subsystem", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Instruction Set Architecture & Assembly", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Microcontrollers", max: 3, weight: 0.9, score: "" }
+            { subtopic: "Microprocessor Unit", max: 3, weight: 0.9, studied: false },
+            { subtopic: "Memory Subsystem", max: 2, weight: 0.6, studied: false },
+            { subtopic: "I/O Subsystem", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Instruction Set Architecture & Assembly", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Microcontrollers", max: 3, weight: 0.9, studied: false }
           ]
         },
         {
-          name: "9.0 Feedback and Control Systems (2.4% / 8 items)",
+          name: "9.0 Feedback and Control Systems (2.4% / 8 items)[cite: 19]",
           items: [
-            { subtopic: "Block Diagrams and Signal Flow Graphs", max: 1, weight: 0.3, score: "" },
-            { subtopic: "LTI Systems and Transient Analysis", max: 1, weight: 0.3, score: "" },
-            { subtopic: "System Modeling and Transfer Function", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Poles, Zeros, Root Locus & Stability Analysis", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Steady State Analysis and Frequency Response", max: 2, weight: 0.6, score: "" }
+            { subtopic: "Block Diagrams and Signal Flow Graphs", max: 1, weight: 0.3, studied: false },
+            { subtopic: "LTI Systems and Transient Analysis", max: 1, weight: 0.3, studied: false },
+            { subtopic: "System Modeling and Transfer Function", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Poles, Zeros, Root Locus & Stability Analysis", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Steady State Analysis and Frequency Response", max: 2, weight: 0.6, studied: false }
           ]
         }
       ]
@@ -636,99 +624,99 @@
       maxScoreScale: 20,
       categories: [
         {
-          name: "1.0 Chemistry for Engineers (2% / 10 items)",
+          name: "1.0 Chemistry for Engineers (2% / 10 items)[cite: 8]",
           items: [
-            { subtopic: "Energy", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Chemistry of Engineering Materials", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Chemistry of Nano materials", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Environment & Special Topics", max: 2, weight: 0.4, score: "" }
+            { subtopic: "Energy", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Chemistry of Engineering Materials", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Chemistry of Nano materials", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Environment & Special Topics", max: 2, weight: 0.4, studied: false }
           ]
         },
         {
-          name: "2.0 Physics for Engineers (3% / 15 items)",
+          name: "2.0 Physics for Engineers (3% / 15 items)[cite: 8]",
           items: [
-            { subtopic: "Work, Energy, Power, Momentum, Kinematics, Dynamics", max: 5, weight: 1.0, score: "" },
-            { subtopic: "Rotation Dynamics, Elasticity, Oscillations/Waves", max: 4, weight: 0.8, score: "" },
-            { subtopic: "Fluids, Heat Transfer", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Electrostatics, Electricity, Magnetism, Optics", max: 4, weight: 0.8, score: "" }
+            { subtopic: "Work, Energy, Power, Momentum, Kinematics, Dynamics", max: 5, weight: 1.0, studied: false },
+            { subtopic: "Rotation Dynamics, Elasticity, Oscillations/Waves", max: 4, weight: 0.8, studied: false },
+            { subtopic: "Fluids, Heat Transfer", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Electrostatics, Electricity, Magnetism, Optics", max: 4, weight: 0.8, studied: false }
           ]
         },
         {
-          name: "3.0 Engineering Economics (1.2% / 6 items)",
+          name: "3.0 Engineering Economics (1.2% / 6 items)[cite: 8, 9]",
           items: [
-            { subtopic: "Introduction Terms & Basic Concepts", max: 1, weight: 0.2, score: "" },
-            { subtopic: "Money-Time Relationship & Economy Study Methods", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Decisions Under Certainty", max: 1, weight: 0.2, score: "" },
-            { subtopic: "Decisions Recognizing Risk & Uncertainty", max: 2, weight: 0.4, score: "" }
+            { subtopic: "Introduction Terms & Basic Concepts", max: 1, weight: 0.2, studied: false },
+            { subtopic: "Money-Time Relationship & Economy Study Methods", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Decisions Under Certainty", max: 1, weight: 0.2, studied: false },
+            { subtopic: "Decisions Recognizing Risk & Uncertainty", max: 2, weight: 0.4, studied: false }
           ]
         },
         {
-          name: "4.0 Engineering Management (1.8% / 9 items)",
+          name: "4.0 Engineering Management (1.8% / 9 items)[cite: 9]",
           items: [
-            { subtopic: "Evolution of Management Theory & Functions", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Planning, Leading, Organizing, Controlling", max: 4, weight: 0.8, score: "" },
-            { subtopic: "Managing Product and Service Operations", max: 1, weight: 0.2, score: "" },
-            { subtopic: "Managing Marketing and Finance Functions", max: 2, weight: 0.4, score: "" }
+            { subtopic: "Evolution of Management Theory & Functions", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Planning, Leading, Organizing, Controlling", max: 4, weight: 0.8, studied: false },
+            { subtopic: "Managing Product and Service Operations", max: 1, weight: 0.2, studied: false },
+            { subtopic: "Managing Marketing and Finance Functions", max: 2, weight: 0.4, studied: false }
           ]
         },
         {
-          name: "5.0 Technopreneurship 101 (2% / 10 items)",
+          name: "5.0 Technopreneurship 101 (2% / 10 items)[cite: 9, 10]",
           items: [
-            { subtopic: "Introduction, Customers, Value Proposition & Ethics", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Market ID, Analysis & Competitive Advantage", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Business Models & Intellectual Property", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Business Plan, Financial Analysis & Capital Raising", max: 3, weight: 0.6, score: "" }
+            { subtopic: "Introduction, Customers, Value Proposition & Ethics", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Market ID, Analysis & Competitive Advantage", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Business Models & Intellectual Property", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Business Plan, Financial Analysis & Capital Raising", max: 3, weight: 0.6, studied: false }
           ]
         },
         {
-          name: "6.0 Physics 2 (2% / 10 items)",
+          name: "6.0 Physics 2 (2% / 10 items)[cite: 10]",
           items: [
-            { subtopic: "Thermodynamics, Condensed Matter, Atomic/Nuclear", max: 4, weight: 0.8, score: "" },
-            { subtopic: "Electricity, Magnetism, and EM Induction", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Inductance / AC", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Optics", max: 1, weight: 0.2, score: "" }
+            { subtopic: "Thermodynamics, Condensed Matter, Atomic/Nuclear", max: 4, weight: 0.8, studied: false },
+            { subtopic: "Electricity, Magnetism, and EM Induction", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Inductance / AC", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Optics", max: 1, weight: 0.2, studied: false }
           ]
         },
         {
-          name: "7.0 Materials Science and Engineering (1.6% / 8 items)",
+          name: "7.0 Materials Science and Engineering (1.6% / 8 items)[cite: 10, 14]",
           items: [
-            { subtopic: "Review Fundamentals & Atomic Bonding", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Crystalline and Non-crystalline Structures", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Mechanical Properties & Processing of Metals", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Electrical, Thermal, Magnetic & Optical Properties", max: 2, weight: 0.4, score: "" }
+            { subtopic: "Review Fundamentals & Atomic Bonding", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Crystalline and Non-crystalline Structures", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Mechanical Properties & Processing of Metals", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Electrical, Thermal, Magnetic & Optical Properties", max: 2, weight: 0.4, studied: false }
           ]
         },
         {
-          name: "8.0 Computer Programming (2% / 10 items)",
+          name: "8.0 Computer Programming (2% / 10 items)[cite: 11]",
           items: [
-            { subtopic: "OOP, UML, Object-Oriented Analysis & Design", max: 4, weight: 0.8, score: "" },
-            { subtopic: "Programming Language Fundamentals", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Exception Handling", max: 1, weight: 0.2, score: "" },
-            { subtopic: "Graphical User Interface (GUI) Programming", max: 2, weight: 0.4, score: "" }
+            { subtopic: "OOP, UML, Object-Oriented Analysis & Design", max: 4, weight: 0.8, studied: false },
+            { subtopic: "Programming Language Fundamentals", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Exception Handling", max: 1, weight: 0.2, studied: false },
+            { subtopic: "Graphical User Interface (GUI) Programming", max: 2, weight: 0.4, studied: false }
           ]
         },
         {
-          name: "9.0 Environment Science and Engineering (2% / 10 items)",
+          name: "9.0 Environment Science and Engineering (2% / 10 items)[cite: 11]",
           items: [
-            { subtopic: "Nature, Ecology & Natural Systems", max: 4, weight: 0.8, score: "" },
-            { subtopic: "Environmental Concerns and Crises", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Environmental Impact Assessment", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Sustainable Development", max: 2, weight: 0.4, score: "" }
+            { subtopic: "Nature, Ecology & Natural Systems", max: 4, weight: 0.8, studied: false },
+            { subtopic: "Environmental Concerns and Crises", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Environmental Impact Assessment", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Sustainable Development", max: 2, weight: 0.4, studied: false }
           ]
         },
         {
-          name: "10.0 ECE Laws, Contracts, Ethics & Safety (2% / 10 items)",
+          name: "10.0 ECE Laws, Contracts, Ethics & Safety (2% / 10 items)[cite: 11]",
           items: [
-            { subtopic: "Laws, Obligations and Contracts", max: 2, weight: 0.4, score: "" },
-            { subtopic: "Pledge, Board Exam Guidelines, and PRC Regulation", max: 3, weight: 0.6, score: "" },
-            { subtopic: "Practicing the ECE Profession", max: 1, weight: 0.2, score: "" },
-            { subtopic: "Statutes, Safety Standards, and PEC Codes", max: 4, weight: 0.8, score: "" }
+            { subtopic: "Laws, Obligations and Contracts", max: 2, weight: 0.4, studied: false },
+            { subtopic: "Pledge, Board Exam Guidelines, and PRC Regulation", max: 3, weight: 0.6, studied: false },
+            { subtopic: "Practicing the ECE Profession", max: 1, weight: 0.2, studied: false },
+            { subtopic: "Statutes, Safety Standards, and PEC Codes", max: 4, weight: 0.8, studied: false }
           ]
         },
         {
-          name: "11.0 CAD (0.4% / 2 items)",
+          name: "11.0 CAD (0.4% / 2 items)[cite: 11]",
           items: [
-            { subtopic: "CAD Environment, Snapping, Dimensioning & Plotting", max: 2, weight: 0.4, score: "" }
+            { subtopic: "CAD Environment, Snapping, Dimensioning & Plotting", max: 2, weight: 0.4, studied: false }
           ]
         }
       ]
@@ -740,66 +728,66 @@
       maxScoreScale: 30,
       categories: [
         {
-          name: "1.0 Signals, Spectra, Signal Processing (1% / 10 items)",
+          name: "1.0 Signals, Spectra, Signal Processing (1% / 10 items)[cite: 22]",
           items: [
-            { subtopic: "Classification & Characteristics of Signals", max: 2, weight: 0.2, score: "" },
-            { subtopic: "Sampling Theorem and Aliasing", max: 3, weight: 0.3, score: "" },
-            { subtopic: "Difference Equations for FIR/IIR Filters", max: 2, weight: 0.2, score: "" },
-            { subtopic: "Convolution, Z-Transforms, Fourier Transforms", max: 3, weight: 0.3, score: "" }
+            { subtopic: "Classification & Characteristics of Signals", max: 2, weight: 0.2, studied: false },
+            { subtopic: "Sampling Theorem and Aliasing", max: 3, weight: 0.3, studied: false },
+            { subtopic: "Difference Equations for FIR/IIR Filters", max: 2, weight: 0.2, studied: false },
+            { subtopic: "Convolution, Z-Transforms, Fourier Transforms", max: 3, weight: 0.3, studied: false }
           ]
         },
         {
-          name: "2.0 Principles of Communications (7.5% / 25 items)",
+          name: "2.0 Principles of Communications (7.5% / 25 items)[cite: 22]",
           items: [
-            { subtopic: "Introduction to Communications Systems", max: 4, weight: 1.2, score: "" },
-            { subtopic: "Noise", max: 5, weight: 1.5, score: "" },
-            { subtopic: "AM, SSB Techniques, and FM", max: 6, weight: 1.8, score: "" },
-            { subtopic: "Radio Receivers", max: 3, weight: 0.9, score: "" },
-            { subtopic: "Pulse & Digital Modulation, Broadband Systems", max: 7, weight: 2.1, score: "" }
+            { subtopic: "Introduction to Communications Systems", max: 4, weight: 1.2, studied: false },
+            { subtopic: "Noise", max: 5, weight: 1.5, studied: false },
+            { subtopic: "AM, SSB Techniques, and FM", max: 6, weight: 1.8, studied: false },
+            { subtopic: "Radio Receivers", max: 3, weight: 0.9, studied: false },
+            { subtopic: "Pulse & Digital Modulation, Broadband Systems", max: 7, weight: 2.1, studied: false }
           ]
         },
         {
-          name: "3.0 Digital Communications (4.5% / 15 items)",
+          name: "3.0 Digital Communications (4.5% / 15 items)[cite: 22, 23]",
           items: [
-            { subtopic: "Introduction to Digital Comm Systems", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Digital Transmission, PAM, PWM, PPM, PCM", max: 3, weight: 0.9, score: "" },
-            { subtopic: "Digital Modulation (ASK, FSK, PSK, QAM)", max: 4, weight: 1.2, score: "" },
-            { subtopic: "Information Theory & Error Detection", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Multiplexing (FDM, TDM, WDM, FDMA, CDMA, TDMA)", max: 4, weight: 1.2, score: "" }
+            { subtopic: "Introduction to Digital Comm Systems", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Digital Transmission, PAM, PWM, PPM, PCM", max: 3, weight: 0.9, studied: false },
+            { subtopic: "Digital Modulation (ASK, FSK, PSK, QAM)", max: 4, weight: 1.2, studied: false },
+            { subtopic: "Information Theory & Error Detection", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Multiplexing (FDM, TDM, WDM, FDMA, CDMA, TDMA)", max: 4, weight: 1.2, studied: false }
           ]
         },
         {
-          name: "4.0 Transmission and Antenna Systems (6.9% / 23 items)",
+          name: "4.0 Transmission and Antenna Systems (6.9% / 23 items)[cite: 23]",
           items: [
-            { subtopic: "Transmission Lines, Losses, Matching & Smith Chart", max: 5, weight: 1.5, score: "" },
-            { subtopic: "Radio Wave Propagation & Field Strength Calculations", max: 8, weight: 2.4, score: "" },
-            { subtopic: "Antenna Systems", max: 6, weight: 1.8, score: "" },
-            { subtopic: "Wave guides and Fiber Optics", max: 4, weight: 1.2, score: "" }
+            { subtopic: "Transmission Lines, Losses, Matching & Smith Chart", max: 5, weight: 1.5, studied: false },
+            { subtopic: "Radio Wave Propagation & Field Strength Calculations", max: 8, weight: 2.4, studied: false },
+            { subtopic: "Antenna Systems", max: 6, weight: 1.8, studied: false },
+            { subtopic: "Wave guides and Fiber Optics", max: 4, weight: 1.2, studied: false }
           ]
         },
         {
-          name: "5.0 Electronics 3: Electronic Systems & Design (2.1% / 7 items)",
+          name: "5.0 Electronics 3: Electronic Systems & Design (2.1% / 7 items)[cite: 23]",
           items: [
-            { subtopic: "Optoelectronic Devices, Sensors & Transducers", max: 2, weight: 0.6, score: "" },
-            { subtopic: "Interfacing Techniques & PLCs", max: 2, weight: 0.6, score: "" },
-            { subtopic: "BMS, HVAC, Security, SCADA & Fire Safety", max: 3, weight: 0.9, score: "" }
+            { subtopic: "Optoelectronic Devices, Sensors & Transducers", max: 2, weight: 0.6, studied: false },
+            { subtopic: "Interfacing Techniques & PLCs", max: 2, weight: 0.6, studied: false },
+            { subtopic: "BMS, HVAC, Security, SCADA & Fire Safety", max: 3, weight: 0.9, studied: false }
           ]
         },
         {
-          name: "6.0 Data Communications (6% / 20 items)",
+          name: "6.0 Data Communications (6% / 20 items)[cite: 23, 24]",
           items: [
-            { subtopic: "Intro, Categories, Configurations & Topologies", max: 5, weight: 1.5, score: "" },
-            { subtopic: "Transmission Modes & 2-Wire vs 4-Wire Circuits", max: 4, weight: 1.2, score: "" },
-            { subtopic: "Synchronization, Network Components & Security", max: 3, weight: 0.9, score: "" },
-            { subtopic: "OSI, SNA, TCP/IP, and Protocols", max: 5, weight: 1.5, score: "" },
-            { subtopic: "LAN/MAN/WAN/GAN and ISDN/B-ISDN", max: 3, weight: 0.9, score: "" }
+            { subtopic: "Intro, Categories, Configurations & Topologies", max: 5, weight: 1.5, studied: false },
+            { subtopic: "Transmission Modes & 2-Wire vs 4-Wire Circuits", max: 4, weight: 1.2, studied: false },
+            { subtopic: "Synchronization, Network Components & Security", max: 3, weight: 0.9, studied: false },
+            { subtopic: "OSI, SNA, TCP/IP, and Protocols", max: 5, weight: 1.5, studied: false },
+            { subtopic: "LAN/MAN/WAN/GAN and ISDN/B-ISDN", max: 3, weight: 0.9, studied: false }
           ]
         }
       ]
     }
   ];
 
-  let appState = JSON.parse(localStorage.getItem("eceBoardTrackerState")) || {
+  let appState = JSON.parse(localStorage.getItem("eceChecklistState")) || {
     activeTabId: "math",
     combineAll: false,
     data: boardSubjects
@@ -825,7 +813,7 @@
   }
 
   function saveData() {
-    localStorage.setItem("eceBoardTrackerState", JSON.stringify(appState));
+    localStorage.setItem("eceChecklistState", JSON.stringify(appState));
   }
 
   function getActiveSubject() {
@@ -869,7 +857,7 @@
     const scoreboardTitle = document.getElementById("scoreboard-title");
     if (scoreboardTitle) {
       scoreboardTitle.textContent = appState.combineAll 
-        ? "Overall ECE Board Exam Score (Combined Out of 100%)" 
+        ? "Overall ECE Board Exam Mastery (Combined Out of 100%)" 
         : `${activeSub.fullName}`;
     }
 
@@ -886,36 +874,32 @@
       let catMaxItems = 0;
 
       const rowsHtml = cat.items.map((item, itemIndex) => {
-        const scoreNum = parseFloat(item.score);
-        const maxNum = parseFloat(item.max);
         const weightNum = parseFloat(item.weight) || 0;
+        const maxNum = parseFloat(item.max) || 0;
+        const isStudied = item.studied;
 
-        let earned = 0;
-        if (!isNaN(scoreNum) && maxNum > 0) {
-          earned = (scoreNum / maxNum) * weightNum;
-        }
+        const earned = isStudied ? weightNum : 0;
 
         catWeight += weightNum;
         catEarned += earned;
         catMaxItems += maxNum;
 
         return `
-          <tr>
-            <td style="width: 42%;">
+          <tr id="row-${activeSub.id}-${catIndex}-${itemIndex}" class="${isStudied ? 'row-checked' : ''}">
+            <td style="width: 10%; text-align: center;">
+              <input type="checkbox" ${isStudied ? 'checked' : ''}
+                onchange="toggleStudied('${activeSub.id}', ${catIndex}, ${itemIndex}, this.checked)" />
+            </td>
+            <td style="width: 45%;">
               <span style="font-weight: 500; font-size: 0.92rem;">${escapeHtml(item.subtopic)}</span>
             </td>
-            <td style="width: 15%;">
-              <input type="number" step="any" min="0" max="${item.max}" value="${item.score}"
-                placeholder="0"
-                oninput="updateScore('${activeSub.id}', ${catIndex}, ${itemIndex}, this.value)" />
-            </td>
             <td style="width: 15%; color: var(--muted); font-weight: 600;">
-              / ${item.max} items
+              ${item.max} items
             </td>
-            <td style="width: 14%; color: var(--muted);">
+            <td style="width: 15%; color: var(--muted);">
               ${weightNum.toFixed(1)}%
             </td>
-            <td style="width: 14%;">
+            <td style="width: 15%;">
               <span class="earned-badge" id="earned-${activeSub.id}-${catIndex}-${itemIndex}">
                 ${earned.toFixed(2)} pts
               </span>
@@ -933,11 +917,11 @@
           <table>
             <thead>
               <tr>
+                <th style="text-align: center;">Studied</th>
                 <th>Subtopic / Competency</th>
-                <th>Correct Items</th>
                 <th>Total Items</th>
                 <th>TOS Weight</th>
-                <th>Earned Pts</th>
+                <th>Mastered Pts</th>
               </tr>
             </thead>
             <tbody>
@@ -945,8 +929,9 @@
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="3">SECTION TOTAL</td>
-                <td id="cat-weight-total-${activeSub.id}-${catIndex}">${catWeight.toFixed(1)}% (${catMaxItems} items)</td>
+                <td colspan="2">SECTION TOTAL</td>
+                <td id="cat-items-total-${activeSub.id}-${catIndex}">${catMaxItems} items</td>
+                <td id="cat-weight-total-${activeSub.id}-${catIndex}">${catWeight.toFixed(1)}%</td>
                 <td class="section-total-earned" id="cat-earned-total-${activeSub.id}-${catIndex}">
                   ${catEarned.toFixed(2)} / ${catWeight.toFixed(1)}
                 </td>
@@ -962,21 +947,29 @@
     recalculateTotals();
   }
 
-  function updateScore(subId, catIndex, itemIndex, value) {
+  function toggleStudied(subId, catIndex, itemIndex, isChecked) {
     const sub = appState.data.find(s => s.id === subId);
     if (sub) {
-      sub.categories[catIndex].items[itemIndex].score = value;
+      sub.categories[catIndex].items[itemIndex].studied = isChecked;
       saveData();
+      
+      // Update row background style instantly without full re-render
+      const row = document.getElementById(`row-${subId}-${catIndex}-${itemIndex}`);
+      if (row) {
+        if (isChecked) row.classList.add('row-checked');
+        else row.classList.remove('row-checked');
+      }
+
       recalculateTotals();
     }
   }
 
-  function resetScores() {
-    if (confirm("Reset all score inputs back to blank?")) {
+  function resetChecklist() {
+    if (confirm("Reset all study checkboxes back to unchecked?")) {
       appState.data.forEach(sub => {
         sub.categories.forEach(cat => {
           cat.items.forEach(item => {
-            item.score = "";
+            item.studied = false;
           });
         });
       });
@@ -991,12 +984,9 @@
 
     sub.categories.forEach(cat => {
       cat.items.forEach(item => {
-        const score = parseFloat(item.score);
-        const max = parseFloat(item.max);
         const weight = parseFloat(item.weight) || 0;
-
-        if (!isNaN(score) && max > 0) {
-          subEarned += (score / max) * weight;
+        if (item.studied) {
+          subEarned += weight;
         }
         subWeight += weight;
       });
@@ -1014,14 +1004,8 @@
       let catWeight = 0;
 
       cat.items.forEach((item, itemIndex) => {
-        const score = parseFloat(item.score);
-        const max = parseFloat(item.max);
         const weight = parseFloat(item.weight) || 0;
-
-        let earned = 0;
-        if (!isNaN(score) && max > 0) {
-          earned = (score / max) * weight;
-        }
+        const earned = item.studied ? weight : 0;
 
         catEarned += earned;
         catWeight += weight;
@@ -1045,7 +1029,7 @@
       displayScale = 100;
       const pointsLabel = document.getElementById("points-label");
       const pointsSubtext = document.getElementById("points-subtext");
-      if (pointsLabel) pointsLabel.textContent = "Total Composite Board Rating";
+      if (pointsLabel) pointsLabel.textContent = "Overall Board Mastery Score";
       if (pointsSubtext) pointsSubtext.textContent = "Combined across Math, Elex, Geas, Est";
     } else {
       const res = calculateSubjectTotals(activeSub);
@@ -1053,8 +1037,8 @@
       displayScale = activeSub.maxScoreScale;
       const pointsLabel = document.getElementById("points-label");
       const pointsSubtext = document.getElementById("points-subtext");
-      if (pointsLabel) pointsLabel.textContent = `${activeSub.name} Points Earned`;
-      if (pointsSubtext) pointsSubtext.textContent = `Weight scale out of ${displayScale} pts`;
+      if (pointsLabel) pointsLabel.textContent = `${activeSub.name} Mastery Points`;
+      if (pointsSubtext) pointsSubtext.textContent = `Completed out of ${displayScale} pts`;
     }
 
     const percentage = (displayEarned / displayScale) * 100;
@@ -1075,10 +1059,10 @@
     const statusEl = document.getElementById("weight-status");
     if (statusEl) {
       if (percentage >= 70) {
-        statusEl.textContent = "Passing Level (>= 70%) 🎉";
+        statusEl.textContent = "Target Mastery Reached (>= 70%) 🎉";
         statusEl.style.color = "var(--success)";
       } else {
-        statusEl.textContent = "Keep pushing for board passing target!";
+        statusEl.textContent = "Keep checking off topics to pass!";
         statusEl.style.color = "var(--warning)";
       }
     }
